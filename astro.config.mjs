@@ -4,7 +4,8 @@ import preact from "@astrojs/preact";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [preact()]
+  integrations: [preact()],
+  site: "https://example.com"
 } // for use rss package
 // site: "url.deployed"
 );
