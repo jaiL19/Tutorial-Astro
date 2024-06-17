@@ -1,9 +1,15 @@
 ---
 import BaseLayout from "../layouts/base-layout.astro";
+import Greeting from "../components/greeting";
 
 const pageTitle = "Home Page";
 ---
 
 <BaseLayout pageTitle={pageTitle}>
   <h2>My Awesome blog subtitle</h2>
+  <!-- <Greeting messages={["Hi", "Hello", "Howdy", "Hey there"]} /> -->
+  <!-- Componente hidratado, client:load le dice a astro
+  que envie y reejecute javascript en el cliente
+  cuando la pagina carga -->
+  <Greeting client:load messages={["Hej", "Hallo", "Hola", "Habari"]} />
 </BaseLayout>

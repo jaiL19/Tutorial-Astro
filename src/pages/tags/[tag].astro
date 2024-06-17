@@ -6,28 +6,33 @@ import BaseLayout from "../../layouts/base-layout.astro";
 // all the pages at those routes will use
 // the same template defined in the file
 export async function getStaticPaths() {
+  // esta funcion siempre debe retornar una lista
+  // de objetos que contiene 'params' y opcionalmente
+  // 'props'
   // retrieve information for construct page routes
   const allPosts = await Astro.glob("../posts/*.md");
 
-  return [
-    { params: { tag: "astro" }, props: { posts: allPosts } },
-    { params: { tag: "success" }, props: { posts: allPosts } },
-    { params: { tag: "community" }, props: { posts: allPosts } },
-    { params: { tag: "blogging" }, props: { posts: allPosts } },
-    { params: { tag: "setbacks" }, props: { posts: allPosts } },
-    { params: { tag: "learning in public" }, props: { posts: allPosts } },
-  ];
+  // get unique Tags elements
+  const uniqueTags = [...new Set(allPosts.map((post) => post.frontmatter.tags).flat())];
+  
+  return uniqueTags.map((tag) => {
+    const filteredPosts = allPosts.filter((post) => post.frontmatter.tags.includes(tag));
+    return {
+      params: { tag },
+      props: { posts: filteredPosts },
+    };
+  });
 }
 
 // recieve information in the HTML template of a page route
 const { tag } = Astro.params;
 const { posts } = Astro.props;
-const filteredPosts = posts.filter((post) => post.frontmatter.tags?.includes(tag));
+// const filteredPosts = posts.filter((post) => post.frontmatter.tags?.includes(tag));
 ---
 
 <BaseLayout pageTitle={tag}>
   <p>Posts tagged with {tag}</p>
   <ul>
-    {filteredPosts.map((post) => <BlogPost url={post.url} title={post.frontmatter.title} />)}
+    {posts.map((post) => <BlogPost url={post.url} title={post.frontmatter.title} />)}
   </ul>
 </BaseLayout>
